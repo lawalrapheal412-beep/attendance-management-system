@@ -10,4 +10,11 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AttendanceManagementSystem.Application\AttendanceManagementSystem.Application.csproj" />
+    <ProjectReference Include="..\AttendanceManagementSystem.Infrastructure\AttendanceManagementSystem.Infrastructure.csproj" />
+    <ProjectReference Include="..\AttendanceManagementSystem.Contracts\AttendanceManagementSystem.Contracts.csproj" />
+    <ProjectReference Include="..\AttendanceManagementSystem.Shared\AttendanceManagementSystem.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

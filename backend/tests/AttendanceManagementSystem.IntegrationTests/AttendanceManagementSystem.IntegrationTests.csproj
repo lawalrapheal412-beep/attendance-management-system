@@ -18,4 +18,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AttendanceManagementSystem.Api\AttendanceManagementSystem.Api.csproj" />
+    <ProjectReference Include="..\..\src\AttendanceManagementSystem.Infrastructure\AttendanceManagementSystem.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
