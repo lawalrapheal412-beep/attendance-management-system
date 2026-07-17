@@ -1,0 +1,12 @@
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\bin\Debug\net10.0\AttendanceManagementSystem.Infrastructure.deps.json
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\bin\Debug\net10.0\AttendanceManagementSystem.Infrastructure.dll
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\bin\Debug\net10.0\AttendanceManagementSystem.Infrastructure.pdb
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\obj\Debug\net10.0\AttendanceManagementSystem.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\obj\Debug\net10.0\AttendanceManagementSystem.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\obj\Debug\net10.0\AttendanceManagementSystem.Infrastructure.AssemblyInfo.cs
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\obj\Debug\net10.0\AttendanceManagementSystem.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\obj\Debug\net10.0\AttendanceManagementSystem.Infrastructure.sourcelink.json
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\obj\Debug\net10.0\AttendanceManagementSystem.Infrastructure.dll
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\obj\Debug\net10.0\refint\AttendanceManagementSystem.Infrastructure.dll
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\obj\Debug\net10.0\AttendanceManagementSystem.Infrastructure.pdb
+C:\Users\HomePC\Desktop\ams-project\attendance-management-system\backend\src\AttendanceManagementSystem.Infrastructure\obj\Debug\net10.0\ref\AttendanceManagementSystem.Infrastructure.dll
