@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using AttendanceManagementSystem.Domain.Entities;
 
 namespace AttendanceManagementSystem.Infrastructure.Persistence;
 
@@ -8,6 +9,7 @@ public sealed class ApplicationDbContext : DbContext
         : base(options)
     {
     }
+    public DbSet<Student> Students => Set<Student>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
