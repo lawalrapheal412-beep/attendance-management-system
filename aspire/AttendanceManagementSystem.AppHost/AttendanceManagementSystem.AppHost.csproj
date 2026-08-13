@@ -8,4 +8,8 @@
     <UserSecretsId>dfa25438-740f-4f0c-b35c-08b4c49dac3c</UserSecretsId>
   </PropertyGroup>
 
+<ItemGroup>
+  <ProjectReference Include="..\..\backend\src\AttendanceManagementSystem.Api\AttendanceManagementSystem.Api.csproj" />
+</ItemGroup>
+
 </Project>
