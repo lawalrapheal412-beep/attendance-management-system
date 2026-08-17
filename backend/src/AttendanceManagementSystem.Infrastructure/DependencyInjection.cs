@@ -1,3 +1,4 @@
+using AttendanceManagementSystem.Infrastructure.Email;
 using AttendanceManagementSystem.Infrastructure.Security;
 using AttendanceManagementSystem.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using AttendanceManagementSystem.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using AttendanceManagementSystem.Infrastructure.QR;
 
 namespace AttendanceManagementSystem.Infrastructure;
 
@@ -37,6 +39,7 @@ public static class DependencyInjection
         services.AddScoped<IFacultyRepository, FacultyRepository>();
         services.AddScoped<ICourseLecturerRepository, CourseLecturerRepository>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IQrCodeService, QrCodeService>();
 
         services.Configure<JwtSettings>(
     configuration.GetSection("Jwt"));
@@ -84,6 +87,11 @@ public static class DependencyInjection
 
         services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-                return services;
-            }
-        }
+        services.Configure<EmailSettings>(
+            configuration.GetSection("Email"));
+
+        services.AddScoped<IEmailService, EmailService>();
+
+        return services;
+     }
+}

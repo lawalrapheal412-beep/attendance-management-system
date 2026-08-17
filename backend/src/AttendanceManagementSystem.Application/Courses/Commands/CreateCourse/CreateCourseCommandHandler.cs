@@ -4,21 +4,34 @@ using MediatR;
 
 namespace AttendanceManagementSystem.Application.Courses.Commands.CreateCourse;
 
-public class CreateCourseCommandHandler
+public sealed class CreateCourseCommandHandler
     : IRequestHandler<CreateCourseCommand, Guid>
 {
     private readonly ICourseRepository _courseRepository;
+    private readonly IDepartmentRepository _departmentRepository;
 
     public CreateCourseCommandHandler(
-        ICourseRepository courseRepository)
+        ICourseRepository courseRepository,
+        IDepartmentRepository departmentRepository)
     {
         _courseRepository = courseRepository;
+        _departmentRepository = departmentRepository;
     }
 
     public async Task<Guid> Handle(
         CreateCourseCommand request,
         CancellationToken cancellationToken)
     {
+        var department = await _departmentRepository.GetByIdAsync(
+            request.DepartmentId,
+            cancellationToken);
+
+        if (department is null)
+        {
+            throw new InvalidOperationException(
+                "The specified department does not exist.");
+        }
+
         var course = new Course(
             request.Code,
             request.Title,

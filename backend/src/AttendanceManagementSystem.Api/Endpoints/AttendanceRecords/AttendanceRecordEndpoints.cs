@@ -13,7 +13,8 @@ public static class AttendanceRecordEndpoints
         this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/attendance-records")
-            .WithTags("Attendance Records");
+    .RequireAuthorization(policy =>
+        policy.RequireRole("Admin", "Lecturer"));
 
         group.MapGet("/", GetAllAttendanceRecords);
 

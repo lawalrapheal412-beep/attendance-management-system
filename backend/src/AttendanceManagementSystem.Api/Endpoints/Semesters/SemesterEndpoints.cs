@@ -12,8 +12,9 @@ public static class SemesterEndpoints
     public static IEndpointRouteBuilder MapSemesterEndpoints(
         this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/semesters")
-            .WithTags("Semesters");
+        var group = app.MapGroup("/api/...")
+    .RequireAuthorization(policy =>
+        policy.RequireRole("Admin"));
 
         group.MapGet("/", GetAllSemesters);
 

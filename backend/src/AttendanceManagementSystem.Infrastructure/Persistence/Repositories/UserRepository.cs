@@ -48,4 +48,12 @@ public class UserRepository : IUserRepository
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
     }
+
+        public async Task<User?> GetByPasswordSetupTokenHashAsync(
+        string tokenHash)
+    {
+        return await _context.Users
+            .FirstOrDefaultAsync(
+                x => x.PasswordSetupTokenHash == tokenHash);
+    }
 }

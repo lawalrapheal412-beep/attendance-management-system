@@ -12,6 +12,8 @@ public class User
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
+    public string? PasswordSetupTokenHash { get; private set; }
+    public DateTime? PasswordSetupTokenExpiresAt { get; private set; }
 
 
     public Student? Student { get; private set; }
@@ -61,11 +63,12 @@ public class User
         UpdatedAt = DateTime.UtcNow;
     }
     public void ChangePassword(string newPasswordHash)
-    {
-        PasswordHash = newPasswordHash;
-        UpdatedAt = DateTime.UtcNow;
-    }
-    public void Activate()
+{
+    PasswordHash = newPasswordHash;
+    PasswordSetupTokenHash = null;
+    PasswordSetupTokenExpiresAt = null;
+    UpdatedAt = DateTime.UtcNow;
+}    public void Activate()
     {
         IsActive = true;
         UpdatedAt = DateTime.UtcNow;
@@ -75,4 +78,20 @@ public class User
         IsActive = false;
         UpdatedAt = DateTime.UtcNow;
     }
+    public void SetPasswordSetupToken(
+    string tokenHash,
+    DateTime expiresAt)
+{
+    PasswordSetupTokenHash = tokenHash;
+    PasswordSetupTokenExpiresAt = expiresAt;
+}
+
+    public void SetPassword(string passwordHash)
+    {
+        PasswordHash = passwordHash;
+        PasswordSetupTokenHash = null;
+        PasswordSetupTokenExpiresAt = null;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
 }

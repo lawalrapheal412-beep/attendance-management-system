@@ -37,6 +37,16 @@ public async Task<LoginResponseDto?> Handle(
         return null;
     }
 
+    if (string.IsNullOrWhiteSpace(user.PasswordHash))
+    {
+        return null;
+    }
+
+if (string.IsNullOrWhiteSpace(user.PasswordHash))
+    {
+        return null;
+    }
+
     var passwordIsValid = _passwordHasher.Verify(
         request.Password,
         user.PasswordHash);

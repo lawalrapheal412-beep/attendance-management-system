@@ -3,6 +3,7 @@ using AttendanceManagementSystem.Application.Students.Commands.DeleteStudent;
 using AttendanceManagementSystem.Application.Students.Commands.UpdateStudent;
 using AttendanceManagementSystem.Application.Students.Queries.GetAllStudents;
 using AttendanceManagementSystem.Application.Students.Queries.GetStudentById;
+using AttendanceManagementSystem.Application.Students.Queries.GetStudentQrCode;
 using MediatR;
 
 namespace AttendanceManagementSystem.Api.Endpoints.Students;
@@ -12,8 +13,9 @@ public static class StudentEndpoints
     public static IEndpointRouteBuilder MapStudentEndpoints(
         this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/students")
-            .WithTags("Students");
+        var group = app.MapGroup("/api/...")
+    .RequireAuthorization(policy =>
+        policy.RequireRole("Admin"));
 
         group.MapGet("/", GetAllStudents);
 
@@ -24,6 +26,8 @@ public static class StudentEndpoints
         group.MapPut("/{id:guid}", UpdateStudent);
 
         group.MapDelete("/{id:guid}", DeleteStudent);
+
+        group.MapGet("/{id:guid}/qr-code", GetStudentQrCode);
 
         return app;
     }
@@ -85,4 +89,19 @@ public static class StudentEndpoints
             ? Results.NoContent()
             : Results.NotFound();
     }
+
+    private static async Task<IResult> GetStudentQrCode(
+    Guid id,
+    ISender sender)
+{
+    var qrCode = await sender.Send(
+        new GetStudentQrCodeQuery(id));
+
+    return qrCode is null
+        ? Results.NotFound()
+        : Results.File(
+            qrCode,
+            "image/png",
+            $"student-{id}-qr.png");
+}
 }

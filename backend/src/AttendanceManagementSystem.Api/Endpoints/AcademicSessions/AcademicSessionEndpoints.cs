@@ -12,8 +12,9 @@ public static class AcademicSessionEndpoints
     public static IEndpointRouteBuilder MapAcademicSessionEndpoints(
         this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/academic-sessions")
-            .WithTags("Academic Sessions");
+        var group = app.MapGroup("/api/...")
+    .RequireAuthorization(policy =>
+        policy.RequireRole("Admin"));
 
         group.MapGet("/", GetAllAcademicSessions);
 

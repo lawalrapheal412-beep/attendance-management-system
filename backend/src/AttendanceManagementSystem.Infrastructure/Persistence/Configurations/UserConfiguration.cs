@@ -37,6 +37,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.UpdatedAt);
 
+        builder.Property(x => x.PasswordSetupTokenHash)
+            .HasMaxLength(128);
+
+        builder.Property(x => x.PasswordSetupTokenExpiresAt);
+
         builder.HasOne(x => x.Student)
             .WithOne(x => x.User)
             .HasForeignKey<Student>(x => x.UserId);

@@ -46,6 +46,7 @@ builder.Services
     .AddInfrastructure(builder.Configuration);
 
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddExceptionHandler<ConflictExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
@@ -98,5 +99,10 @@ app.MapAdminEndpoints();
 app.MapFacultyEndpoints();
 app.MapCourseLecturerEndpoints();
 app.MapAuthenticationEndpoints();
+app.MapPasswordSetupEndpoints();
 
 app.Run();
+
+public partial class Program
+{
+}

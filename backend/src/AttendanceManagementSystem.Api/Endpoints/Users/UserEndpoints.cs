@@ -3,6 +3,7 @@ using AttendanceManagementSystem.Application.Users.Commands.DeleteUser;
 using AttendanceManagementSystem.Application.Users.Commands.UpdateUser;
 using AttendanceManagementSystem.Application.Users.Queries.GetAllUsers;
 using AttendanceManagementSystem.Application.Users.Queries.GetUserById;
+using AttendanceManagementSystem.Application.Users.Commands.ResendPasswordSetup;
 using MediatR;
 
 namespace AttendanceManagementSystem.Api.Endpoints.Users;
@@ -26,6 +27,10 @@ public static class UserEndpoints
         group.MapPut("/{id:guid}", UpdateUser);
 
         group.MapDelete("/{id:guid}", DeleteUser);
+
+        group.MapPost(
+    "/{id:guid}/resend-password-setup",
+    ResendPasswordSetup);
 
         return app;
     }
@@ -87,4 +92,17 @@ public static class UserEndpoints
             ? Results.NoContent()
             : Results.NotFound();
     }
+
+    private static async Task<IResult> ResendPasswordSetup(
+    Guid id,
+    ISender sender)
+{
+    var success = await sender.Send(
+        new ResendPasswordSetupCommand(id));
+
+    return success
+        ? Results.NoContent()
+        : Results.BadRequest(
+            "User does not exist or already has a password.");
+}
 }

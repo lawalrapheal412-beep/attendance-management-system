@@ -13,7 +13,7 @@ public static class CourseRegistrationEndpoints
         this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/course-registrations")
-            .WithTags("Course Registrations");
+    .RequireAuthorization();
 
         group.MapGet("/", GetAllCourseRegistrations);
 
