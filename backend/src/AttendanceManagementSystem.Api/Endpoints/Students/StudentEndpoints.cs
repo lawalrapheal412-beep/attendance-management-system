@@ -13,10 +13,10 @@ public static class StudentEndpoints
     public static IEndpointRouteBuilder MapStudentEndpoints(
         this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/...")
+        var group = app.MapGroup("/api/students")
+    .WithTags("Students")
     .RequireAuthorization(policy =>
         policy.RequireRole("Admin"));
-
         group.MapGet("/", GetAllStudents);
 
         group.MapGet("/{id:guid}", GetStudentById);

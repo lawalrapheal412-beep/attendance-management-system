@@ -12,7 +12,8 @@ public static class CourseEndpoints
     public static IEndpointRouteBuilder MapCourseEndpoints(
         this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/...")
+        var group = app.MapGroup("/api/courses")
+    .WithTags("Courses")
     .RequireAuthorization(policy =>
         policy.RequireRole("Admin"));
 

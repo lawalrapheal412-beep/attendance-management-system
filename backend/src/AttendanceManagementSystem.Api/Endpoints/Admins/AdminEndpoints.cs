@@ -11,9 +11,10 @@ public static class AdminEndpoints
     public static IEndpointRouteBuilder MapAdminEndpoints(
         this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/...")
-    .RequireAuthorization(policy =>
-        policy.RequireRole("Admin"));
+        var group = app.MapGroup("/api/admins")
+        .WithTags("Admins")
+        .RequireAuthorization(policy =>
+            policy.RequireRole("Admin"));
 
         group.MapGet("/", GetAllAdmins);
 

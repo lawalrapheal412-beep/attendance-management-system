@@ -12,9 +12,10 @@ public static class DepartmentEndpoints
     public static IEndpointRouteBuilder MapDepartmentEndpoints(
         this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/...")
-    .RequireAuthorization(policy =>
-        policy.RequireRole("Admin"));
+        var group = app.MapGroup("/api/departments")
+        .WithTags("Departments")
+        .RequireAuthorization(policy =>
+            policy.RequireRole("Admin"));
 
         group.MapGet("/", GetAllDepartments);
 

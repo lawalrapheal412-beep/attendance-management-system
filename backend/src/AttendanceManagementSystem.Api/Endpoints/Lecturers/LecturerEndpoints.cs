@@ -12,7 +12,8 @@ public static class LecturerEndpoints
     public static IEndpointRouteBuilder MapLecturerEndpoints(
         this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/...")
+        var group = app.MapGroup("/api/lecturers")
+    .WithTags("Lecturers")
     .RequireAuthorization(policy =>
         policy.RequireRole("Admin"));
 
