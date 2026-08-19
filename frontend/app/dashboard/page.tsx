@@ -7,7 +7,6 @@ import {
   getCurrentUser,
   getToken,
   logout,
-  type AuthUser,
 } from "@/lib/auth";
 
 interface UserSummary {
@@ -21,8 +20,7 @@ interface UserSummary {
 export default function DashboardPage() {
   const router = useRouter();
 
-const [user] = useState<AuthUser | null>(
-  () => getCurrentUser(),
+const [user] = useState(() => getCurrentUser(),
 );
 
   const [users, setUsers] = useState<UserSummary[]>([]);
@@ -32,8 +30,7 @@ const [user] = useState<AuthUser | null>(
   useEffect(() => {
   const token = getToken();
 
-  if (!token || !user) {
-    router.replace("/login");
+  if (!token) {
     return;
   }
 
@@ -43,13 +40,13 @@ const [user] = useState<AuthUser | null>(
     })
     .catch(() => {
       logout();
-      setError("Your session has expired.");
       router.replace("/login");
     })
     .finally(() => {
       setLoading(false);
     });
-}, [router, user]);
+}, [router]);
+
   function handleLogout() {
   logout();
   router.replace("/login");
