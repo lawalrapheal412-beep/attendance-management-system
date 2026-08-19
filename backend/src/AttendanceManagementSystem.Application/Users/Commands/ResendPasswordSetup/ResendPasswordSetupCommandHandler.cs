@@ -61,7 +61,7 @@ public sealed class ResendPasswordSetupCommandHandler
                 "Frontend:BaseUrl is not configured.");
 
         var setupUrl =
-            $"{frontendBaseUrl.TrimEnd('/')}/set-password?token={rawToken}";
+            $"{frontendBaseUrl.TrimEnd('/')}/setup-password?token={rawToken}";
 
         var htmlBody = $"""
             <h2>Set your Attendance Management System password</h2>
