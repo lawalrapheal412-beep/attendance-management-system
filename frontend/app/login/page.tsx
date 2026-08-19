@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/api";
+import { setAuthSession } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,16 +27,7 @@ export default function LoginPage() {
         throw new Error("Only administrators can access this application.");
       }
 
-      sessionStorage.setItem("ams_token", result.token);
-      sessionStorage.setItem(
-        "ams_user",
-        JSON.stringify({
-          userId: result.userId,
-          fullName: result.fullName,
-          email: result.email,
-          role: result.role,
-        }),
-      );
+      setAuthSession(result);
 
       router.replace("/dashboard");
     } catch (err) {

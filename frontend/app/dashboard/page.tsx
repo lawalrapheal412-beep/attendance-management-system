@@ -3,6 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getUsers } from "@/lib/api";
+import {
+  getCurrentUser,
+  getToken,
+  logout,
+  type AuthUser,
+} from "@/lib/auth";
 
 interface UserSummary {
   id: string;
@@ -15,48 +21,39 @@ interface UserSummary {
 export default function DashboardPage() {
   const router = useRouter();
 
-  const [user, setUser] = useState<{
-    fullName: string;
-    email: string;
-  } | null>(null);
+const [user] = useState<AuthUser | null>(
+  () => getCurrentUser(),
+);
 
   const [users, setUsers] = useState<UserSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const token = sessionStorage.getItem("ams_token");
-    const storedUser = sessionStorage.getItem("ams_user");
+  const token = getToken();
 
-    if (!token || !storedUser) {
-      router.replace("/login");
-      return;
-    }
-
-    setUser(JSON.parse(storedUser));
-
-    getUsers(token)
-      .then((result) => {
-        setUsers(result as UserSummary[]);
-      })
-      .catch(() => {
-        sessionStorage.removeItem("ams_token");
-        sessionStorage.removeItem("ams_user");
-        setError("Your session has expired.");
-        router.replace("/login");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [router]);
-
-  function logout() {
-    sessionStorage.removeItem("ams_token");
-    sessionStorage.removeItem("ams_user");
-
+  if (!token || !user) {
     router.replace("/login");
+    return;
   }
 
+  getUsers(token)
+    .then((result) => {
+      setUsers(result as UserSummary[]);
+    })
+    .catch(() => {
+      logout();
+      setError("Your session has expired.");
+      router.replace("/login");
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+}, [router, user]);
+  function handleLogout() {
+  logout();
+  router.replace("/login");
+}
   return (
     <main className="min-h-screen bg-zinc-100">
       <header className="border-b bg-white">
@@ -83,7 +80,7 @@ export default function DashboardPage() {
             )}
 
             <button
-              onClick={logout}
+              onClick={handleLogout}
               className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium hover:bg-zinc-50"
             >
               Logout
