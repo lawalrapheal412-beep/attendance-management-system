@@ -3,6 +3,8 @@
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser, isAdmin } from "@/lib/auth";
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -33,5 +35,15 @@ export default function DashboardLayout({
     );
   }
 
-  return <>{children}</>;
+  return (
+    <div className="min-h-screen bg-zinc-100">
+      <Sidebar />
+
+      <div className="lg:pl-64">
+        <Header />
+
+        <main>{children}</main>
+      </div>
+    </div>
+  );
 }
