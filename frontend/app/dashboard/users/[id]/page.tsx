@@ -1,9 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { useParams, useRouter } from "next/navigation";
-import { getUserById, type UserSummary } from "@/lib/api";
+
 import { getToken } from "@/lib/auth";
+
+import {
+  deleteUser,
+  getUserById,
+  type UserSummary,
+} from "@/lib/api";
 
 function getRoleName(role: number): string {
   switch (role) {
@@ -28,6 +35,46 @@ export default function UserDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+
+  async function handleDelete() {
+  if (!user) {
+    return;
+  }
+
+  const confirmed = window.confirm(
+    `Are you sure you want to delete ${user.fullName}?`,
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  const token = getToken();
+
+  if (!token) {
+    setDeleteError("Your session has expired.");
+    return;
+  }
+
+  setDeleteError("");
+  setDeleting(true);
+
+  try {
+    await deleteUser(token, user.id);
+
+    router.push("/dashboard/users");
+  } catch (err) {
+    setDeleteError(
+      err instanceof Error
+        ? err.message
+        : "Unable to delete user.",
+    );
+  } finally {
+    setDeleting(false);
+  }
+}
   useEffect(() => {
     const token = getToken();
 
@@ -115,17 +162,38 @@ export default function UserDetailsPage() {
             <p className="mt-1 text-sm text-zinc-500">
               View information about this user.
             </p>
-          </div>
+        </div>
 
+        <div className="flex items-center gap-3">
           <span
             className={
-              user.isActive
+            user.isActive
                 ? "rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700"
                 : "rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-700"
             }
           >
             {user.isActive ? "Active" : "Inactive"}
           </span>
+
+          <button
+            type="button"
+            onClick={() =>
+              router.push(`/dashboard/users/${user.id}/edit`)
+            }
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+          >
+            Edit User
+         </button>
+
+         <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+         >
+            {deleting ? "Deleting..." : "Delete User"}
+          </button>
+        </div>
         </div>
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2">

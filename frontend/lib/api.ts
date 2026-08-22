@@ -108,6 +108,121 @@ export async function getUserById(
   return response.json();
 }
 
+export interface UpdateUserRequest {
+  id: string;
+  fullName: string;
+  email: string;
+  role: number;
+  isActive: boolean;
+}
+export async function updateUser(
+  token: string,
+  id: string,
+  data: UpdateUserRequest,
+): Promise<UserSummary> {
+  const response = await fetch(`${API_BASE}/users/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const message = await response.text();
+
+      throw new Error(
+        message
+          ? message.replace(/^"|"$/g, "")
+          : "Invalid user information.",
+      );
+    }
+
+    if (response.status === 404) {
+      throw new Error("User not found.");
+    }
+
+    if (response.status === 401 || response.status === 403) {
+      throw new Error(
+        "You are not authorized to update this user.",
+      );
+    }
+
+    throw new Error("Unable to update user.");
+  }
+  if (response.status === 204) {
+    return getUserById(token, id);
+  }
+  return response.json();
+}
+
+export async function deleteUser(
+  token: string,
+  id: string,
+): Promise<void> {
+  const response = await fetch(`${API_BASE}/users/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error("User not found.");
+    }
+
+    if (response.status === 401 || response.status === 403) {
+      throw new Error(
+        "You are not authorized to delete this user.",
+      );
+    }
+
+    throw new Error("Unable to delete user.");
+  }
+}
+export async function resendPasswordSetup(
+  token: string,
+  id: string,
+): Promise<void> {
+  const response = await fetch(
+    `${API_BASE}/users/${id}/resend-password-setup`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const message = await response.text();
+
+      throw new Error(
+        message
+          ? message.replace(/^"|"$/g, "")
+          : "Unable to resend password setup link.",
+      );
+    }
+
+    if (response.status === 401 || response.status === 403) {
+      throw new Error(
+        "You are not authorized to resend password setup links.",
+      );
+    }
+
+    if (response.status === 404) {
+      throw new Error("User not found.");
+    }
+
+    throw new Error(
+      "Unable to resend password setup link.",
+    );
+  }
+}
 export async function getUsers(
   token: string,
 ): Promise<unknown[]> {

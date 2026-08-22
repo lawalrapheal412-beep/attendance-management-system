@@ -8,6 +8,8 @@ import { getToken } from "@/lib/auth";
 import {
   createUser,
   getUsers,
+  deleteUser,
+  resendPasswordSetup,
   type UserSummary,
 } from "@/lib/api";
 
@@ -31,6 +33,13 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [deleteError, setDeleteError] = useState("");
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+
+  const [resendError, setResendError] = useState("");
+  const [resendingUserId, setResendingUserId] = useState<string | null>(null);
+  const [resendSuccess, setResendSuccess] = useState("");
+
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   const [fullName, setFullName] = useState("");
@@ -40,37 +49,6 @@ export default function UsersPage() {
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState("");
   const [createSuccess, setCreateSuccess] = useState("");
-
-  useEffect(() => {
-    const token = getToken();
-
-    if (!token) {
-      return;
-    }
-
-    let cancelled = false;
-
-    getUsers(token)
-      .then((result) => {
-        if (!cancelled) {
-          setUsers(result as UserSummary[]);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setError("Unable to load users.");
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   async function handleCreateUser(
     event: React.FormEvent<HTMLFormElement>,
@@ -122,6 +100,110 @@ export default function UsersPage() {
     setCreateError("");
     setCreateSuccess("");
   }
+  async function handleDeleteUser(userId: string) {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this user? This action cannot be undone.",
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  setDeleteError("");
+
+  const token = getToken();
+
+  if (!token) {
+    setDeleteError("Your session has expired.");
+    return;
+  }
+
+  setDeletingUserId(userId);
+
+  try {
+    await deleteUser(token, userId);
+
+    setUsers((currentUsers) =>
+      currentUsers.filter((user) => user.id !== userId),
+    );
+  } catch (err) {
+    setDeleteError(
+      err instanceof Error
+        ? err.message
+        : "Unable to delete user.",
+    );
+  } finally {
+    setDeletingUserId(null);
+  }
+}
+
+async function handleResendPasswordSetup(userId: string) {
+  const confirmed = window.confirm(
+    "Are you sure you want to resend the password setup link to this user?",
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  setResendError("");
+  setResendSuccess("");
+
+  const token = getToken();
+
+  if (!token) {
+    setResendError("Your session has expired.");
+    return;
+  }
+
+  setResendingUserId(userId);
+
+  try {
+    await resendPasswordSetup(token, userId);
+
+    setResendSuccess(
+      "Password setup link sent successfully.",
+    );
+  } catch (err) {
+    setResendError(
+      err instanceof Error
+        ? err.message
+        : "Unable to resend password setup link.",
+    );
+  } finally {
+    setResendingUserId(null);
+  }
+}
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    }
+
+    let cancelled = false;
+
+    getUsers(token)
+      .then((result) => {
+        if (!cancelled) {
+          setUsers(result as UserSummary[]);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError("Unable to load users.");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-8">
@@ -262,6 +344,24 @@ export default function UsersPage() {
         </div>
       )}
 
+      {deleteError && (
+        <div className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+          {deleteError}
+        </div>
+      )}
+
+      {resendError && (
+        <div className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+         {resendError}
+        </div>
+      )}
+
+      {resendSuccess && (
+        <div className="mt-6 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">
+          {resendSuccess}
+        </div>
+      )}
+
       {/* Users Table */}
       <div className="mt-8 overflow-hidden rounded-xl bg-white shadow-sm">
         <div className="overflow-x-auto">
@@ -326,7 +426,8 @@ export default function UsersPage() {
 
                   {/* Actions */}
                   <td className="px-6 py-4">
-                    <button
+                    <div className="flex items-center gap-3">
+                      <button
                       type="button"
                       onClick={() =>
                         router.push(
@@ -337,6 +438,29 @@ export default function UsersPage() {
                     >
                       View
                     </button>
+
+                    <button
+                    type="button"
+                    onClick={() => handleResendPasswordSetup(user.id)}
+                    disabled={resendingUserId === user.id}
+                    className="font-medium text-amber-600 hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        {resendingUserId === user.id
+                          ? "Sending..."
+                          : "Resend Password"}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteUser(user.id)}
+                      disabled={deletingUserId === user.id}
+                      className="font-medium text-red-600 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {deletingUserId === user.id
+                          ? "Deleting..."
+                          : "Delete"}
+                      </button>
+                      </div>
                   </td>
                 </tr>
               ))}
